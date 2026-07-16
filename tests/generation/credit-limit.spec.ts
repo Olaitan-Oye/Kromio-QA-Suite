@@ -2,16 +2,20 @@ import { test, expect } from '@playwright/test';
 import { BuilderPage } from '../../pages/BuilderPage';
 
 /**
- * BUG-002: Stated free-tier limit is inconsistent across the product.
- * Marketing/docs (Product Hunt, third-party listings) state "20 credits
- * per month". The live Pricing page and in-app behavior state/enforce
- * "2 generations per day". See /bug-reports/BUG-002-quota-mismatch.md
+ * BUG-002: Free-tier quota is inconsistent across product surfaces.
+ * See /bug-reports/BUG-002-quota-mismatch.md
  *
- * This is not a functional break — the app enforces *a* limit correctly —
- * but the conflicting claims across surfaces is a trust/communication bug
- * worth flagging, and a good target for boundary testing regardless.
+ * PAUSED (2026-07-17): this test burns real daily credits on a live
+ * account every run (2 generations per execution). Running it
+ * repeatedly during locator debugging already consumed most of a
+ * day's quota. Plan: rewrite using page.route() to intercept and
+ * mock the generation API response, so this can run unlimited times
+ * without touching the real account limit. Do not un-skip until
+ * that rewrite is done.
  */
-test.describe('Free tier — generation limit boundary', () => {
+test.describe.configure({ timeout: 90_000 });
+
+test.describe.skip('Free tier — generation limit boundary', () => {
   test('paywall appears exactly at the stated daily limit, not before or after', async ({ page }) => {
     const builder = new BuilderPage(page);
     await builder.goto();
