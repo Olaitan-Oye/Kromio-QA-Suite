@@ -11,6 +11,7 @@ import { defineConfig, devices } from '@playwright/test';
  */
 export default defineConfig({
   testDir: './tests',
+  testIgnore: '**/setup/**',
   timeout: 30_000,
   expect: { timeout: 5_000 },
   fullyParallel: false, // credit-limited free tier — avoid burning trials in parallel
